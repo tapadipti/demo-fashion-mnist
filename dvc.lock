@@ -1,0 +1,82 @@
+schema: '2.0'
+stages:
+  load_data:
+    cmd: python src/load_data.py
+    deps:
+    - path: src/load_data.py
+      hash: md5
+      md5: b1cc18baea1257f3fbfb0aa9c771ed42
+      size: 227
+    outs:
+    - path: output/data.pkl
+      hash: md5
+      md5: 35353c71da0985eed8bb507bbc53bd91
+      size: 54950285
+  train:
+    cmd: python src/train.py
+    deps:
+    - path: output/data.pkl
+      hash: md5
+      md5: 35353c71da0985eed8bb507bbc53bd91
+      size: 54950285
+    - path: src/train.py
+      hash: md5
+      md5: bc569a7cd1e1aa6f4b999c560e88b9b1
+      size: 3331
+    params:
+      params.yaml:
+        train.batch_size: 128
+        train.dropout: 0.4
+        train.hidden_units: 64
+        train.lr: 0.01
+        train.num_epochs: 10
+    outs:
+    - path: dvclive/metrics.json
+      hash: md5
+      md5: 306e7eb71a86a7eb57a9d78331f931a8
+      size: 54
+    - path: dvclive/plots/metrics/accuracy.tsv
+      hash: md5
+      md5: 11091004673a93e8185c2c316f63053d
+      size: 224
+    - path: output/myfmmodel.keras
+      hash: md5
+      md5: f1942141962600b236906d599307f030
+      size: 3681312
+    - path: output/myfmmodel.tar.gz
+      hash: md5
+      md5: 662da15934990f113ebf0f169a2aa584
+      size: 3380252
+    - path: output/train_logs.csv
+      hash: md5
+      md5: b57b0aa5394c74d6708aa82c5f84f947
+      size: 425
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+    - path: output/data.pkl
+      hash: md5
+      md5: 35353c71da0985eed8bb507bbc53bd91
+      size: 54950285
+    - path: output/myfmmodel.keras
+      hash: md5
+      md5: f1942141962600b236906d599307f030
+      size: 3681312
+    - path: src/evaluate.py
+      hash: md5
+      md5: d55658c1947e760905f8784a695033b4
+      size: 2983
+    outs:
+    - path: output/metrics.json
+      hash: md5
+      md5: e99a13a381045d879f4e74b0da7a58b4
+      size: 61
+    - path: output/predictions.json
+      hash: md5
+      md5: 9c4f643f03c86d0218deec9205533fa3
+      size: 310000
+    - path: output/test/samples_of_mispredicted_images/
+      hash: md5
+      md5: 51817f1f6829693ca0f5cfef28acae52.dir
+      size: 174224
+      nfiles: 10
